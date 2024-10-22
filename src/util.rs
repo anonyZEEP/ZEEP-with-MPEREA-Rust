@@ -219,14 +219,13 @@ pub fn fr_to_bytes(fr: &Fr) -> Vec<u8> {
 }
 
 pub fn fr_to_int(fr: &Fr) -> u128 {
-    let s = Fr::to_string(&fr);
-    let mut num= 0 ;
-    match s.parse::<u128>() {
-        Ok(number) => num = number,
-        Err(e) => println!("Failed to parse number: {}", e),
-    };
-    num
-       
+    let bytes = fr_to_bytes(fr); 
+    
+    let mut array = [0u8; 16];  
+    let bytes_len = bytes.len().min(16);
+    array[..bytes_len].copy_from_slice(&bytes[..bytes_len]);
+
+    u128::from_le_bytes(array)
 }
 
 // Function to convert G1 element to BitVec
